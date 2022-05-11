@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Minha Calculadora</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
+
+    <!-- Fontawesome -->
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"/>
+
+    <style>
+        body {
+            background-image: url("/img/jungle.jpg");
+            background-size: cover; 
+        }
+
+
+        table {
+            border-style: groove;
+            border-radius: 25px;
+            padding: 20px;
+            background-color: rgba(6, 109, 128, 0.116);
+        }
+
+        th, td {
+            border: 2px solid black;
+            background-color: rgb(28, 213, 237);
+        }
+
+        button {
+            width: 50px;
+            height:50px;
+            border-radius: 15px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            opacity: 0.6;
+        }
+
+        
+
+        .ColorSpanishGreen {
+            background-color: rgb(0, 154, 78);
+            color: rgb(255, 255, 255);
+        }
+       
+        .ColorWhite {
+            background-color: rgb(255, 255, 255);
+        }
+        
+
+        .ColorPigmentBlue {
+            background-color:  rgb(28, 160, 237);
+        }
+
+        .ColorYellowRose {
+            background-color: rgb(255, 242, 0);
+        }
+        
+
+        .ColorBlack {
+            background-color: rgb(0, 0, 0);
+            color: rgb(255, 255, 255);
+        }
+
+        .ColorGrey {
+            background-color: rgb(201, 177, 177);
+        }
+
+        .lightOff {
+            background-color: #bccd95;
+            height: 40px;
+            border-radius: 5px;
+            border-style: ridge;
+        }
+
+        .lightOn {
+            background-color: #5dff00;
+            height: 40px;
+            border-radius: 5px;
+            border-style: ridge;
+        }
+
+
+        .left {
+            text-align: left;
+        }
+
+        .right {
+            text-align: right;
+        }
+
+        #display1 {
+            font-size: 10px;
+        }
+
+        #display2 {
+            font-size: 22px;
+        }
+            
+        </style>
+
+<script>
+
+    let $calc = '0'; // variavel para guardar os calculos e enviar para o eval
+
+function light() {
+    // liga e desliga a luz do visor
+    let $calc = document.getElementById('display');
+    $calc.classList.toggle('lightOn');
+
+    // trocar o icon interruptor
+    let $lightBtn = document.getElementById('lightBtn');
+
+    if ($lightBtn.classList.contains('fa-toggle-on')) {
+        $lightBtn.classList.remove('fa-toggle-on');
+        $lightBtn.classList.add('fa-toggle-off');
+    } else {
+        $lightBtn.classList.remove('fa-toggle-off');
+        $lightBtn.classList.add('fa-toggle-on');
+    }
+
+    //$lightBtn.classList.toggle('fa-toggle-off');
+}
+
+            // função para intrudizir valores
+function display(val) {
+    let $display = $calc //[document.getElementById('display1').innerHTML, document.getElementById('display2').innerHTML]
+    let $endOpr = false;
+    let $start = false;
+    let $lastChar = $calc.slice(-1)
+
+    if ($calc.endsWith('/') || $calc.endsWith('*') || $calc.endsWith('-') || $calc.endsWith('+')) {
+        $endOpr = true;
+    }
+
+    if ($calc === '') {
+        $start = true;
+    }
+  
+    
+    switch (val) {
+        case '.':
+            document.getElementById('dot').disabled = true;
+            if ($lastChar === ')') {val = ''}
+            break;
+
+        case '/':
+            document.getElementById('dot').disabled = false;
+               if ($endOpr) {deleteID();};
+                  if ($start) {val = '0'};
+                      if ($calc === '-') {val = ''};
+                        if ($lastChar === '(') {val = ''}
+                        $display = '&divide;';
+                        break;
+
+        case '*':
+            document.getElementById('dot').disabled = false;
+               if ($endOpr) {deleteID();};
+                  if ($start) {val = '0'};
+                      if ($calc === '-') {val = ''};
+                      break;
+        case '-':
+            document.getElementById('dot').disabled = false;
+               if ($endOpr) {deleteID();};
+               break;
+        case '+':
+            document.getElementById('dot').disabled = false;
+               if ($endOpr) {deleteID();};
+                  if ($start) {val = '0'};
+                      if ($calc === '-') {val = ''};
+                      break;
+                //  Só deixar usar ')' após '(' ,  
+        case ')':
+               if ($calc.split(')').length >= $calc.split('(').length) {
+                val = '';
+             } else if($calc.endsWith('(')) {
+                    val = '';     
+            }
+            break;
+            // após '(' ter um 'numero' , após ')' ter uma operação
+        case '(':
+            if ($endOpr && $calc.length > 1) {
+            } else if ($calc.endsWith('(') || $start) {
+            } else {
+                val='';
+            }
+            break;
+            
+            
+        default:
+            if ($lastChar === ')') {val = ''}
+
+    }
+
+    // para escrever nos visores
+        
+    if ($start === '0' && val !== '.') {
+        $calc = val; 
+        document.getElementById('display1').innerHTML =  val$;
+        document.getElementById('display2').innerHTML =  calc;
+       
+     //alert('passou');
+    } else {
+        $calc += val;
+        document.getElementById('display1').innerHTML =  $calc;
+        document.getElementById('display2').innerHTML +=  val;
+       
+    }
+
+}
+
+        function clr() {
+            $calc = '0';
+            document.getElementById('display1').innerHTML =  '0';
+            document.getElementById('display2').innerHTML =  $calc;
+            document.getElementById('dot').disabled = false;
+        }
+
+        function deleteID() {
+            let $display = [document.getElementById('display1').innerHTML, document.getElementById('display2').innerHTML]
+            let $lastChar = $calc.slice(-1);
+            let $char = $calc.slice(0, -1);
+            let $endOpr = false;
+
+           if ($calc.split('.').length >= 0) {
+                document.getElementById('dot').disabled = true;};
+
+            if ($calc.endsWith('.')) {
+                document.getElementById('dot').disabled = false;
+            } 
+          
+            if ($calc.endsWith('/') || $calc.endsWith('*') || $calc.endsWith('-') || $calc.endsWith('+')) {
+                $endOpr = true;
+            }
+
+            // nao deixa acrescentar um ponto depois de apagar
+            if ($lastChar === '.') {
+                document.getElementById('dot').disabled = false;
+            }
+
+            // ver se temos um ponto depois de um operador
+            if ($endOpr && $calc.lastIndexOf('.') > Math.max($char.lastIndexOf('/'), $char.lastIndexOf('*'), $char.lastIndexOf('+'), $char.lastIndexOf('-'))) {
+                document.getElementById('dot').disabled = true;
+            }
+
+            if ($calc.length == 1) {
+                document.getElementById('display1').innerHTML =  '0';
+                document.getElementById('display2').innerHTML =  $calc;
+                $calc = '0';
+            } else {
+                $calc = $calc.slice(0, -1);
+                document.getElementById('display1').innerHTML =  $display[1].slice(0, -1);
+                document.getElementById('display2').innerHTML =  $calc;
+                 
+            }        
+
+        }
+
+        function result() {
+            let $display = [document.getElementById('display1').innerHTML, document.getElementById('display2').innerHTML]
+
+            if (!($calc.endsWith('/') || $calc.endsWith('*') || $calc.endsWith('-') || $calc.endsWith('+'))) {
+                $calc = eval($calc) * 10 / 10;
+                document.getElementById('display2').innerHTML =  $calc;
+                
+              
+         /*   if ($calc[1] == eval($calc[0]) * 10 / 10) {
+            } else {
+                result().eval($calc[1].split(0, 1)) * 10 / 10;
+            
+            } */
+        }
+
+        }
+    
+    </script>
+
+
+</head>
+<body>
+    
+    <table class="ColorPigmentRed">
+        <tr>
+            <th colspan="2" class="left"><img src="/img/download.png" style="width: 30px;"></th>
+            <th colspan="2" class="right"><i id="lightBtn" onclick="light()" class="fas fa-toggle-on"></i></th>
+        </tr>
+        <tr>
+            <th colspan="4" id="display" class="lightOff">
+                <div id="display1" class="right">0</div>
+                <div id="display2" class="right">0</div>
+                </th>
+            </tr>
+            <tr>
+                <td><button class="ColorYellowRose" onclick="display('(');">(</button></td>
+                <td><button class="ColorYellowRose" onclick="display(')');">)</button></td>
+                <td><button class="ColorYellowRose" onclick="clr();">C</button></td>
+                <td><button class="ColorYellowRose" onclick="deleteID();"><i class="fas fa-backspace"></button></td>
+    
+            </tr>
+            <tr>
+                <td><button class="ColorWhite" onclick="display('7');">7</button></td>
+                <td><button class="ColorWhite" onclick="display('8');">8</button></td>
+                <td><button class="ColorWhite" onclick="display('9');">9</button></td>
+                <td><button class="ColorSpanishGreen" id="division" onclick="display('/');"><i class="fas fa-divide"></i></button></td>
+            </tr>
+            <tr>
+                <td><button class="ColorWhite" onclick="display('4');">4</button></td>
+                <td><button class="ColorWhite" onclick="display('5');">5</button></td>
+                <td><button class="ColorWhite" onclick="display('6');">6</button></td>
+                <td><button class="ColorSpanishGreen" id="multiply" onclick="display('*');"><i class="fas fa-times"></i></button></td>
+            </tr>
+            <tr>
+                <td><button class="ColorWhite" onclick="display('1');">1</button></td>
+                <td><button class="ColorWhite" onclick="display('2');">2</button></td>
+                <td><button class="ColorWhite" onclick="display('3');">3</button></td>
+                <td><button class="ColorSpanishGreen" id="subtract" onclick="display('-');"><i class="fas fa-minus"></i></button></td>
+            </tr>
+            <tr>
+                <td><button class="ColorYellowRose" id="dot" onclick="display('.');">,</button></td>
+                <td><button class="ColorWhite" onclick="display('0');">0</button></td>
+                <td><button class="ColorBlack" onclick="result();"><i class="fas fa-equals"></i></button></td>
+                <td><button class="ColorSpanishGreen" onclick="display('+');"><i class="fas fa-plus"></button></td>
+            </tr>
+        </table>
+
+    </body>
+
+</html>
